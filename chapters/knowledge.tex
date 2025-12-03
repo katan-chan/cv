@@ -1,0 +1,136 @@
+\section{Không gian và hệ tọa độ}
+
+Xét không gian Euclid ba chiều $\mathbb{R}^3$ với hệ tọa độ Descartes có gốc tại $O(0,0,0)$.  
+Mỗi điểm trong không gian được biểu diễn bởi một vectơ vị trí 
+\[
+p = (x,\, y,\, z)^\top.
+\]
+
+Mọi chuyển động cứng trong không gian có thể được mô tả bằng hai phép biến đổi cơ bản:
+
+\begin{itemize}
+    \item \textbf{Phép tịnh tiến}: dịch toàn bộ hệ theo một vectơ $t = (t_x, t_y, t_z)^\top$, làm thay đổi vị trí nhưng không làm thay đổi hướng hay hình dạng.
+    \item \textbf{Phép quay}: quay toàn bộ hệ quanh một trục cố định đi qua gốc tọa độ, được mô tả bởi ma trận quay $R \in \mathbb{R}^{3\times3}$.
+\end{itemize}
+
+Giả sử tại thời điểm $t$, tọa độ của một điểm là $p = (x, y, z)^\top$.  
+Khi đó, tác động tổng hợp của phép quay $R$ và phép tịnh tiến $t$ được biểu diễn bằng hàm biến đổi:
+\[
+f(p) = R p + t.
+\]
+
+
+\section{Phép tịnh tiến}
+
+Xét không gian Euclid ba chiều $\mathbb{R}^3$ với hệ tọa độ Descartes $(Oxyz)$.  
+\textbf{Phép tịnh tiến} là phép biến đổi dịch chuyển toàn bộ không gian 
+theo cùng một hướng và cùng một độ dài, không làm thay đổi hình dạng, kích thước hay hướng của vật thể.
+
+Phép tịnh tiến được xác định bởi một vectơ dịch chuyển 
+\[
+t = (t_x, t_y, t_z)^\top,
+\]
+trong đó $t_x$, $t_y$, $t_z$ lần lượt là độ dời theo các trục $x$, $y$, $z$.
+
+Nếu một điểm ban đầu có tọa độ $p = (x, y, z)^\top$, 
+thì sau khi thực hiện phép tịnh tiến, điểm mới $p'$ được xác định bởi:
+\[
+p' = p + t =
+\begin{bmatrix}
+x + t_x\\[3pt]
+y + t_y\\[3pt]
+z + t_z
+\end{bmatrix}.
+\]
+
+\section{Phép xoay}
+
+Xét không gian Euclid ba chiều $\mathbb{R}^3$ với hệ tọa độ Descartes $(Oxyz)$, 
+trong đó $O(0,0,0)$ là gốc tọa độ.
+
+\textbf{Phép xoay (rotation)} là phép biến đổi bảo toàn gốc tọa độ và độ dài của mọi vectơ, 
+đồng thời thay đổi hướng của chúng.  
+Một phép xoay được xác định bởi một trục quay và một góc quay quanh trục đó.  
+Tập hợp tất cả các phép xoay trong $\mathbb{R}^3$ tạo thành nhóm đặc biệt trực giao $SO(3)$.
+
+Trong thực hành, ta thường mô tả một phép xoay tổng quát bằng ba phép xoay liên tiếp quanh 
+các trục tọa độ chính $x$, $y$ và $z$.  
+Ba góc quay tương ứng $\theta_x$, $\theta_y$, $\theta_z$ 
+được gọi là \textbf{các góc Euler}, lần lượt biểu diễn:
+
+\begin{itemize}
+    \item $\theta_x$: góc quay quanh trục $x$, điều khiển sự \emph{nghiêng} lên xuống ;
+    \item $\theta_y$: góc quay quanh trục $y$, điều khiển sự \emph{quay ngang} sang hai bên ;
+    \item $\theta_z$: góc quay quanh trục $z$, điều khiển sự \emph{xoay tròn} quanh trục dọc .
+\end{itemize}
+
+Ba phép quay cơ bản này được biểu diễn bằng các ma trận:
+
+\subsection*{Phép quay quanh trục $x$}
+\[
+R_x(\theta_x) =
+\begin{bmatrix}
+1 & 0 & 0\\
+0 & \cos\theta_x & -\sin\theta_x\\
+0 & \sin\theta_x & \cos\theta_x
+\end{bmatrix}.
+\]
+
+\subsection*{Phép quay quanh trục $y$}
+\[
+R_y(\theta_y) =
+\begin{bmatrix}
+\cos\theta_y & 0 & \sin\theta_y\\
+0 & 1 & 0\\
+-\sin\theta_y & 0 & \cos\theta_y
+\end{bmatrix}.
+\]
+
+\subsection*{Phép quay quanh trục $z$}
+\[
+R_z(\theta_z) =
+\begin{bmatrix}
+\cos\theta_z & -\sin\theta_z & 0\\
+\sin\theta_z & \cos\theta_z & 0\\
+0 & 0 & 1
+\end{bmatrix}.
+\]
+
+\subsection*{Phép quay tổng quát}
+Một phép quay tổng quát trong không gian 3 chiều có thể được biểu diễn 
+dưới dạng hợp của ba phép quay cơ bản:
+\[
+R = R_z(\theta_z)\, R_y(\theta_y)\, R_x(\theta_x),
+\]
+trong đó thứ tự nhân ma trận xác định hệ quy chiếu (fixed-frame hoặc moving-frame).  
+
+\section{Phân rã giá trị riêng suy biến (SVD)}
+
+Với mọi ma trận $H \in \mathbb{R}^{m \times n}$, 
+tồn tại các ma trận trực giao $U \in \mathbb{R}^{m \times m}$ và $V \in \mathbb{R}^{n \times n}$, 
+cùng ma trận chéo $S \in \mathbb{R}^{m \times n}$ có các phần tử không âm sao cho:
+\[
+H = U S V^\top.
+\]
+Các phần tử trên đường chéo của $S$ gọi là \textbf{các giá trị suy biến} (singular values) của $H$.
+
+\section{Biểu diễn bằng quaternion}
+
+Quaternion là phần mở rộng của số phức vào không gian ba chiều, 
+có dạng tổng quát:
+\[
+q = w + x\,\mathbf{i} + y\,\mathbf{j} + z\,\mathbf{k},
+\]
+trong đó $w, x, y, z \in \mathbb{R}$ và các đơn vị $\mathbf{i}, \mathbf{j}, \mathbf{k}$ thỏa mãn:
+\[
+\mathbf{i}^2 = \mathbf{j}^2 = \mathbf{k}^2 = \mathbf{i}\mathbf{j}\mathbf{k} = -1.
+\]
+
+Một \textbf{quaternion đơn vị} $q = (x, y, z, w)$ với $\|q\| = 1$ 
+biểu diễn một phép quay trong không gian 3 chiều.  
+Cụ thể, phép quay quanh trục đơn vị $\hat{u} = (u_x, u_y, u_z)$ 
+với góc quay $\theta$ được viết dưới dạng:
+\[
+q = \cos\frac{\theta}{2} + \hat{u}\,\sin\frac{\theta}{2}
+= \cos\frac{\theta}{2} + (u_x\mathbf{i} + u_y\mathbf{j} + u_z\mathbf{k})\,\sin\frac{\theta}{2}.
+\]

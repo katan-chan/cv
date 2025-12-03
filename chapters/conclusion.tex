@@ -1,0 +1,46 @@
+\section{Tóm tắt kết quả}
+
+Luận văn trình bày một pipeline xử lý để theo dõi và ánh xạ chuyển động bàn tay
+từ video sang mô hình xương 3D. Hệ thống gồm các thành phần chính:
+
+\begin{itemize}
+    \item \textbf{Phát hiện landmarks}: Sử dụng thư viện MediaPipe~\cite{mediapipe2020} 
+          để phát hiện 21 điểm đặc trưng trên bàn tay với tốc độ 30 khung hình/giây,
+          đạt độ chính xác cao trong điều kiện chiếu sáng thông thường.
+    
+    \item \textbf{Trích xuất chuyển động}: Áp dụng thuật toán Lucas–Kanade optical flow~\cite{lucas1981iterative}
+          để tính toán vector dịch chuyển và vận tốc của từng landmark,
+          kết hợp với bộ lọc trung bình trượt để giảm nhiễu.
+    
+      \item \textbf{Ước lượng root rotation}: Sử dụng thuật toán Kabsch~\cite{kabsch1976solution}
+          trên ba điểm đại diện (wrist, index MCP, pinky MCP)
+          để tính ma trận quay toàn cục với độ ổn định cao.
+          Quaternion thu được qua SLERP~\cite{shoemake1985animating}
+          để làm mượt chuyển động giữa các frame.
+    
+    \item \textbf{Retargeting}: Chuyển đổi landmarks sang không gian mô hình 3D,
+          tính quaternion local cho từng khớp bằng phép quay ngắn nhất,
+          và áp dụng forward kinematics để dựng lại skeleton hoàn chỉnh.
+\end{itemize}
+
+Hệ thống đã được triển khai với kiến trúc client-server:
+backend Python xử lý video và tính toán,
+frontend Three.js hiển thị mô hình 3D,
+giao tiếp qua WebSocket đảm bảo độ trễ thấp.
+
+\section{Đánh giá và hạn chế}
+
+\subsection*{Quan sát thực nghiệm}
+
+\begin{itemize}
+    \item \textbf{Độ ổn định hạn chế}: Chuyển động hiển thị thường dao động, xuất hiện jitter; SLERP~\cite{shoemake1985animating} giúp giảm nhiễu nhưng chưa triệt để.
+    \item \textbf{Sai số hình học}: Ánh xạ hướng các ngón tay từ landmarks sang quaternion local chưa bám sát tư thế thật, đặc biệt khi có xoay phức tạp.
+    \item \textbf{Root rotation chưa chính xác}: Kabsch~\cite{kabsch1976solution} với 3 điểm đại diện cho kết quả thiếu ổn định trong các góc nhìn khó hoặc che khuất.
+    \item \textbf{Phụ thuộc điều kiện ảnh}: MediaPipe~\cite{mediapipe2020} suy giảm chất lượng khi ánh sáng kém hoặc có bóng mạnh.
+\end{itemize}
+
+\section{Kết luận}
+
+Hệ thống được xây dựng theo đúng nền tảng toán học (optical flow~\cite{lucas1981iterative}, Kabsch~\cite{kabsch1976solution}, quaternion/SLERP~\cite{shoemake1985animating}) và pipeline MediaPipe~\cite{mediapipe2020}. Tuy nhiên, kết quả thực nghiệm chưa đạt chất lượng mong muốn: chuyển động tái hiện còn dao động, tư thế ngón tay chưa tự nhiên, và root rotation thiếu ổn định trong nhiều tình huống.
+
+Những hạn chế này bắt nguồn từ đặc tính dữ liệu (độ sâu tương đối), lựa chọn điểm đại diện ít cho căn chỉnh, và ánh xạ động học đơn giản hoá. Do đó, phần kết luận tập trung ghi nhận các vấn đề kỹ thuật và giới hạn quan sát được, thay vì khẳng định hiệu quả ứng dụng.

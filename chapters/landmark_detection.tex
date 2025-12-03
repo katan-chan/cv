@@ -1,0 +1,220 @@
+\section{Không gian và hệ toạ độ}
+
+Trong quá trình mô hình hoá hình học và phát hiện landmarks, 
+ta cần xác định rõ các không gian làm việc và mối quan hệ giữa chúng.  
+Mỗi bước xử lý – từ thu nhận ảnh, phát hiện điểm đặc trưng, 
+đến tái dựng hình học ba chiều – đều diễn ra trong một hệ toạ độ riêng.  
+Các hệ này được liên kết với nhau thông qua các phép chiếu, phép quay, và tịnh tiến.
+
+\subsection{World Space}
+
+Không gian thế giới, ký hiệu $\mathcal{W}$, 
+là không gian tuyệt đối cố định nơi các vật thể tồn tại.  
+Một điểm $P \in \mathcal{W}$ có toạ độ:
+\[
+P = (X, Y, Z)^\top \in \mathbb{R}^3.
+\]
+Trong hệ thống tracking thời gian thực, gốc toạ độ $O_W$ thường được đặt tại vị trí camera
+hoặc một điểm tham chiếu cố định trong môi trường.
+Để đơn giản hóa tính toán, ta có thể chọn hệ toạ độ local với gốc tại cổ tay (wrist),
+loại bỏ thành phần tịnh tiến tuyệt đối và chỉ giữ lại tư thế tương đối.
+
+\subsection{Camera Space}
+
+Khi camera quan sát thế giới, mỗi điểm $P = (X, Y, Z)$ 
+được biểu diễn trong hệ toạ độ của camera $\mathcal{C}$:
+\[
+P_C = R_{CW}(P - t_{CW}),
+\]
+với $R_{CW}$ là ma trận quay và $t_{CW}$ là vectơ tịnh tiến từ thế giới sang camera.  
+Trục $z_C$ của camera hướng về phía trước ống kính, 
+$x_C$ hướng sang phải và $y_C$ hướng xuống, 
+tuân theo quy ước bàn tay phải của MediaPipe.
+
+\subsection{Image Space}
+
+Mỗi điểm trong không gian camera được chiếu lên mặt phẳng ảnh 
+bằng mô hình chiếu phối cảnh:
+\[
+\begin{bmatrix}
+u \\ v \\ 1
+\end{bmatrix}
+\sim
+K
+\begin{bmatrix}
+X_C / Z_C \\ Y_C / Z_C \\ 1
+\end{bmatrix},
+\qquad
+K =
+\begin{bmatrix}
+f_x & 0 & c_x\\
+0 & f_y & c_y\\
+0 & 0 & 1
+\end{bmatrix}.
+\]
+Ở đây $(u, v)$ là toạ độ pixel, $(c_x, c_y)$ là tâm ảnh, 
+và $(f_x, f_y)$ là tiêu cự tính theo đơn vị pixel.  
+Mặt phẳng ảnh $\mathcal{I}$ do đó là không gian hai chiều $\mathbb{R}^2$, 
+biểu diễn dữ liệu thu được từ camera.
+
+\subsection{Không gian chuẩn hoá (Normalized Landmark Space)}
+
+Trong MediaPipe, các toạ độ ảnh được chuẩn hoá theo kích thước khung hình:
+\[
+x = \frac{u}{W}, \qquad y = \frac{v}{H}, \qquad z = z_\mathrm{rel},
+\]
+với $W, H$ là chiều rộng và chiều cao ảnh.  
+Giá trị $z_\mathrm{rel}$ thể hiện độ sâu tương đối so với cổ tay; 
+nó không mang đơn vị vật lý nhưng bảo toàn tỉ lệ giữa các khớp.  
+
+Không gian này, ký hiệu $\mathcal{N}$, 
+được dùng cho toàn bộ pipeline xử lý landmarks:  
+\[
+p_i = (x_i, y_i, z_i)^\top \in [0,1]^2 \times \mathbb{R}.
+\]
+Tất cả các phép xoay, tịnh tiến, và căn chỉnh trong các chương sau 
+đều được thực hiện trong $\mathcal{N}$, 
+sau khi đã dịch về gốc cổ tay.
+
+\subsection{Từ không gian chuẩn hóa đến không gian làm việc 3D}
+
+Để phục vụ cho các thuật toán xử lý hình học (Kabsch, optical flow, retargeting),
+ta cần chuyển landmarks từ không gian chuẩn hóa sang không gian làm việc 3D.
+
+\textbf{Bước 1: Dịch gốc về wrist.}
+Đặt wrist (landmark 0) làm gốc toạ độ local:
+\[
+p'_i = (x_i - x_0,\, y_i - y_0,\, z_i - z_0)^\top, \quad i = 0, 1, \ldots, 20.
+\]
+Phép dịch này loại bỏ thành phần tịnh tiến tuyệt đối,
+giúp tập trung vào hình dạng và tư thế tương đối của bàn tay.
+
+\textbf{Bước 2: Chuyển về pixel khi cần thiết.}
+Đối với các thuật toán xử lý ảnh như optical flow,
+toạ độ chuẩn hóa cần được chuyển về pixel:
+\[
+(u_i, v_i) = (x_i \cdot W,\, y_i \cdot H),
+\]
+với $W = 1280$, $H = 720$ là kích thước khung hình.
+
+Sau các bước xử lý, dữ liệu được chuyển ngược về không gian chuẩn hóa
+để đảm bảo tính nhất quán trong pipeline.
+
+\subsection{Tóm tắt quan hệ giữa các không gian}
+
+Chuỗi ánh xạ giữa các hệ toạ độ được mô tả bởi:
+\[
+P_W 
+\xrightarrow{R_{CW},\,t_{CW}}
+P_C
+\xrightarrow{\text{chiếu phối cảnh}}
+(u,v)
+\xrightarrow{\text{chuẩn hoá}}
+(x,y,z_\mathrm{rel}).
+\]
+Mỗi tầng mô tả một mức trừu tượng khác nhau của cùng một điểm, 
+từ vị trí vật lý trong thế giới thật đến biểu diễn số học dùng trong mô hình học sâu.
+
+
+\section{Bài toán phát hiện landmarks trên ảnh}
+
+Mục tiêu của bài toán là xác định vị trí của một tập hợp các điểm đặc trưng (landmarks) 
+trên ảnh hai chiều thu được từ camera, 
+chẳng hạn các khớp trên bàn tay, các đặc trưng khuôn mặt, hoặc vị trí các bộ phận cơ thể.
+
+\subsection{Đầu vào và đầu ra của mô hình}
+
+Cho một ảnh màu thu được tại thời điểm $t$:
+\[
+I_t(x, y): \Omega \subset \mathbb{R}^2 \rightarrow \mathbb{R}^3,
+\]
+với $(x, y)$ là toạ độ điểm ảnh, giá trị $I_t(x, y)$ là vector màu trong hệ RGB.  
+
+Mô hình học sâu $f_\theta$ nhận ảnh này làm đầu vào và ước lượng vị trí 
+của $n$ landmarks trên mặt phẳng ảnh:
+\[
+f_\theta : \mathbb{R}^{H \times W \times 3} \longrightarrow \mathbb{R}^{n \times 2},
+\qquad
+f_\theta(I_t) = \hat{\mathcal{L}}_t = \{\, \hat{p}_i = (\hat{x}_i, \hat{y}_i) \mid i = 1,\dots,n \,\}.
+\]
+Đầu ra $\hat{\mathcal{L}}_t$ là toạ độ tương đối (thường được chuẩn hoá về miền $[0,1]^2$) 
+biểu diễn vị trí của từng landmark trong ảnh.
+
+\subsection{Hàm mục tiêu huấn luyện}
+
+Bài toán được huấn luyện theo khuôn khổ học có giám sát với tập dữ liệu 
+\[
+\mathcal{D} = \{ (I_t, \mathcal{L}_t^{\text{gt}}) \mid t = 1, \dots, N \},
+\]
+trong đó $\mathcal{L}_t^{\text{gt}} = \{ (x_i^{\text{gt}}, y_i^{\text{gt}}) \}$ là vị trí thật (ground truth) 
+của các landmarks.  
+Hàm mục tiêu cần cực tiểu hoá sai số giữa dự đoán và giá trị gán nhãn:
+\[
+\min_{\theta} \; \mathcal{L}(\theta)
+= \sum_{t=1}^{N} \sum_{i=1}^{n} 
+\bigl\| f_\theta(I_t)_i - (x_i^{\text{gt}}, y_i^{\text{gt}}) \bigr\|^2.
+\]
+
+Một cách khác thường dùng trong thực hành là dự đoán \emph{heatmap} 
+$H_i(x, y)$ cho từng landmark, biểu diễn xác suất hiện diện tại mỗi điểm ảnh, 
+rồi lấy cực đại để thu được toạ độ $(\hat{x}_i, \hat{y}_i)$.  
+Trong trường hợp này, hàm mất mát thường là sai số bình phương giữa heatmap dự đoán và heatmap gán nhãn Gaussian.
+
+\section{Thư viện MediaPipe}
+
+\subsection{Giới thiệu}
+
+\textbf{MediaPipe}~\cite{mediapipe2020} là thư viện mã nguồn mở do Google phát triển, 
+nhằm cung cấp các mô hình học sâu và pipeline xử lý thời gian thực 
+cho các bài toán thị giác máy tính.  
+Thư viện này được thiết kế đa nền tảng (Python, C++, Android, Web) 
+và hỗ trợ nhiều tác vụ khác nhau như phát hiện khuôn mặt, bàn tay, 
+theo dõi tư thế (pose tracking), và phân tích cử chỉ.
+
+Trong phạm vi nghiên cứu này, MediaPipe được sử dụng để 
+	extbf{phát hiện và trích xuất các điểm đặc trưng (landmarks) của bàn tay}
+từ ảnh hoặc video đầu vào thu được qua camera.
+
+\subsection{Luồng hoạt động và mô hình sử dụng}
+
+MediaPipe hoạt động theo kiến trúc \emph{đồ thị xử lý} (graph pipeline), 
+trong đó mỗi bước là một nút (node) đảm nhiệm một tác vụ cụ thể.  
+Đối với bài toán bàn tay, pipeline gồm hai mô hình chính:
+
+\begin{itemize}
+    \item \textbf{Palm Detection Model:}  
+    Mô hình CNN phát hiện vùng chứa bàn tay trong ảnh, 
+    đầu ra là hộp bao (bounding box) bao quanh lòng bàn tay.
+    
+    \item \textbf{Hand Landmark Model:}  
+    Mô hình hồi quy đa đầu ra dự đoán vị trí của 21 landmarks 
+    trong vùng ảnh đã cắt, ký hiệu:
+    \[
+    \mathcal{L} = \{\, p_i = (x_i, y_i, z_i) \mid i = 1, \dots, 21 \,\}.
+    \]
+\end{itemize}
+
+Các toạ độ $(x_i, y_i)$ được chuẩn hoá trong miền $[0, 1]$ theo kích thước ảnh, 
+còn $z_i$ biểu diễn độ sâu tương đối so với mặt phẳng ảnh (giá trị nhỏ hơn nghĩa là gần camera hơn).  
+Luồng xử lý khung hình có thể tóm tắt như sau:
+\[
+\text{Ảnh đầu vào} 
+\;\xrightarrow{\text{Phát hiện}}\;
+\text{Vùng bàn tay} 
+\;\xrightarrow{\text{Hồi quy landmarks}}\;
+\mathcal{L}.
+\]
+
+\subsection{Đánh giá và nhận xét}
+
+MediaPipe đạt tốc độ xử lý cao (30–60 khung hình/giây) 
+và hoạt động ổn định trên cả CPU lẫn GPU, 
+phù hợp cho các ứng dụng thời gian thực như nhận dạng cử chỉ, 
+điều khiển robot, hoặc giao tiếp người–máy.  
+
+Về độ chính xác, sai số trung bình của các landmarks thường nhỏ hơn $5\%$ 
+so với kích thước bàn tay trong ảnh.  
+Tuy nhiên, giá trị $z$ chỉ mang tính tương đối nên chưa thể tái dựng hình học 3D tuyệt đối.  
+Hơn nữa, mô hình có thể gặp khó khăn khi bàn tay bị che khuất, 
+xoay nghiêng mạnh hoặc có điều kiện chiếu sáng kém.
+

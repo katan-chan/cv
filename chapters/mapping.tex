@@ -1,0 +1,228 @@
+\section{Không gian và cấu trúc khung xương của mô hình bàn tay}
+
+Mô hình bàn tay được biểu diễn dưới dạng hệ xương phân cấp (skeletal hierarchy),
+trong đó mỗi khớp (bone) được mô tả bởi ba thành phần:
+tên khớp, khớp cha (\texttt{parent}), 
+vị trí tương đối so với khớp cha (\texttt{position}) 
+và quaternion quay cục bộ (\texttt{quaternion}).
+Tập dữ liệu \texttt{skeleton\_metadata.json} chứa tổng cộng 26 nút:
+một nút gốc \texttt{\_rootJoint}, 
+một nút trung tâm \texttt{Bone\_00},
+và 24 khớp còn lại thuộc năm ngón tay.
+
+\subsection{Hệ toạ độ cơ sở}
+
+Nút gốc \texttt{\_rootJoint} có
+\[
+\texttt{position} = (0, 0, 0), \qquad \texttt{quaternion} = (0, 0, 0, 1),
+\]
+được dùng làm gốc của toàn bộ hệ toạ độ.
+Khớp \texttt{Bone\_00} là con trực tiếp của \texttt{\_rootJoint}
+với vị trí \((0, 0, 0)\) và một quaternion quay cố định,
+đóng vai trò là khớp cổ tay trung tâm.
+
+Mọi khớp còn lại được biểu diễn trong hệ toạ độ local của khớp cha:
+vector \texttt{position} cho biết hướng và độ dài của đoạn xương tiếp theo,
+còn \texttt{quaternion} mô tả hướng xoay của đoạn đó trong tư thế bind.
+Độ dài các đoạn xương (chuẩn hoá) được tính từ chuẩn Euclid của vector vị trí
+và nằm trong khoảng:
+\[
+0.60 \lesssim \|\texttt{position}\| \lesssim 3.23.
+\]
+Tổng độ dài từ cổ tay tới đầu ngón giữa (chuỗi \texttt{Bone008\_08} đến \texttt{Bone011\_end\_022})
+xấp xỉ $7.25$ đơn vị ảo.
+
+\subsection{Cấu trúc phân cấp của khung xương}
+
+Các khớp được tổ chức thành năm chuỗi tương ứng với năm ngón tay,
+đều xuất phát từ \texttt{Bone\_00}.
+Tên khớp mang phần hậu tố dạng \texttt{\_NN},
+trong đó \texttt{NN} tương ứng với chỉ số landmark trong hệ 3D bên ngoài.
+
+Bảng~\ref{tab:hand_skeleton} tóm tắt cấu trúc cho từng ngón tay,
+bao gồm số đoạn liên tiếp và khoảng độ dài tương đối của các đoạn
+(theo dữ liệu trong \texttt{skeleton\_metadata.json}).
+
+\begin{table}[h!]
+\centering
+\caption{Khung xương bàn tay (tóm tắt từ \texttt{skeleton\_metadata.json})}
+\label{tab:hand_skeleton}
+\renewcommand{\arraystretch}{1.05}
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Ngón tay} & \textbf{Số đoạn (bao gồm end)} & \textbf{Khoảng chiều dài} \\ \hline
+Ngón cái (Thumb)  & 4 & $0.91\,\text{–}\,2.11$ \\ \hline
+Ngón trỏ (Index)  & 5 & $0.77\,\text{–}\,3.11$ \\ \hline
+Ngón giữa (Middle) & 5 & $0.93\,\text{–}\,3.11$ \\ \hline
+Ngón áp út (Ring) & 5 & $0.87\,\text{–}\,3.21$ \\ \hline
+Ngón út (Pinky)   & 5 & $0.60\,\text{–}\,3.22$ \\ \hline
+\end{tabular}
+\end{table}
+
+
+\subsection{Định hướng khớp bằng quaternion}
+
+Mỗi khớp mang một quaternion đơn vị $(x, y, z, w)$
+mô tả phép quay local so với khớp cha trong tư thế bind.
+Ví dụ:
+\begin{equation}
+\begin{aligned}
+q_{\texttt{Bone001\_01}} &= (6.20\times 10^{-8},\; 2.91\times 10^{-8},\; -0.4092,\; 0.9124), \\
+q_{\texttt{Bone002\_02}} &= (-8.5\times 10^{-10},\; -5.2\times 10^{-8},\; -0.0176,\; 0.9998).
+\end{aligned}
+\end{equation}
+Từ các quaternion này, có thể khôi phục ma trận quay $R \in SO(3)$ của từng khớp
+và tính được hướng xương (bone direction) trong không gian mô hình.
+
+\subsection{Ý nghĩa trong không gian mô hình}
+
+Không gian của mô hình bàn tay hoàn toàn là không gian chuẩn hoá:
+tất cả các toạ độ và độ dài là tương đối,
+chỉ giữ tỉ lệ giữa các đốt tay và cấu trúc phân cấp giữa các khớp.
+Cấu trúc này cung cấp:
+\begin{itemize}
+    \item khung tham chiếu hình học để ánh xạ landmarks thu được từ ảnh
+          vào hệ xương 3D;
+    \item thông tin động học (cha–con) để tính động học thuận;
+    \item hướng khớp ban đầu để nội suy quay và thực hiện retargeting chuyển động.
+\end{itemize}
+Nhờ đó, mô hình có thể nhận chuyển động ước lượng từ ảnh
+và biểu diễn lại trong không gian 3D một cách nhất quán.
+
+\section{Retargeting từ landmarks 3D sang mô hình xương}
+
+Các chương trước đã trình bày cách thu thập và xử lý dữ liệu từ camera:
+\begin{itemize}
+    \item Chương 3: MediaPipe phát hiện 21 landmarks và trả về tọa độ chuẩn hóa.
+    \item Chương 4: Optical flow trích xuất chuyển động; Kabsch tính root rotation từ 3 điểm đại diện.
+\end{itemize}
+
+Bước cuối cùng là ánh xạ toàn bộ dữ liệu này lên hệ xương phân cấp của mô hình 3D.
+Quá trình này gọi là \textbf{retargeting}, bao gồm:
+\begin{enumerate}
+    \item Chuyển đổi không gian tọa độ (camera $\to$ scene).
+    \item Ánh xạ landmarks sang bones thông qua bảng mapping.
+    \item Tính quaternion local cho từng khớp dựa trên hướng của landmarks.
+    \item Áp dụng forward kinematics để dựng lại skeleton hoàn chỉnh.
+\end{enumerate}
+
+\subsection{Cấu trúc phân cấp và bảng ánh xạ}
+
+Skeleton của mô hình bao gồm hai nút gốc đặc biệt:
+\texttt{\_rootJoint} (gốc tuyệt đối) và \texttt{Bone\_00} (root bone chính).
+Nút \texttt{Bone\_00} có quaternion khởi tạo không trivial:
+\[
+q_{\texttt{Bone\_00}} = (0.707, 0, 0, 0.707),
+\]
+thể hiện phép quay $90^\circ$ quanh trục $x$ để căn chỉnh hệ toạ độ mô hình với hệ toạ độ làm việc.
+
+Ánh xạ từ landmarks sang bones không phải là song ánh:
+chỉ một tập con các landmarks được chọn để điều khiển các khớp quan trọng.
+Bảng ánh xạ $\mathcal{M}$ xác định quan hệ:
+\[
+\mathcal{M}: \{0, 1, 2, 4, 5, \ldots, 20\} \to \{\texttt{Bone\_00}, \texttt{Bone002\_02}, \ldots\},
+\]
+ví dụ: $\mathcal{M}(0) = \texttt{Bone\_00}$, 
+$\mathcal{M}(1) = \texttt{Bone002\_02}$,
+$\mathcal{M}(5) = \texttt{Bone013\_013}$.
+
+Lưu ý rằng một số ID landmarks (như 3, 13, 14) không xuất hiện trong $\mathcal{M}$,
+và các bone trung gian (như \texttt{Bone001\_01}, \texttt{Bone004\_04})
+được điều khiển gián tiếp qua chuỗi động học.
+
+\subsection{Chuỗi ngón tay và bind pose}
+
+Mỗi ngón tay được biểu diễn bằng một chuỗi các cặp $(i, j)$,
+với $i, j$ là ID của landmarks cha–con:
+\begin{align*}
+\text{Thumb} &: \{(1,2), (2,3), (3,4)\}, \\
+\text{Index} &: \{(5,6), (6,7), (7,8)\}, \\
+\text{Middle} &: \{(9,10), (10,11), (11,12)\}, \\
+\text{Ring} &: \{(13,14), (14,15), (15,16)\}, \\
+\text{Pinky} &: \{(17,18), (18,19), (19,20)\}.
+\end{align*}
+
+Tại frame đầu tiên khi phát hiện bàn tay, 
+bộ ba điểm $\{L_0, L_5, L_{17}\}$ (wrist, index MCP, pinky MCP)
+được ghi lại làm bind pose cho thuật toán Kabsch.
+Các landmarks còn lại không tham gia vào tính toán root rotation,
+mà chỉ dùng để xác định hướng của từng đốt ngón.
+
+\subsection{Chuyển đổi không gian tọa độ}
+
+Landmarks từ MediaPipe nằm trong hệ camera với quy ước:
+trục $+x$ sang phải, $+y$ xuống, $+z$ ra khỏi camera.
+Để chuyển sang hệ scene (thường dùng $+Y$ lên trong Three.js/Unity), áp dụng ma trận:
+\[
+R_{\text{scene}} = \begin{bmatrix}
+1 & 0 & 0 \\
+0 & -1 & 0 \\
+0 & 0 & 1
+\end{bmatrix}.
+\]
+
+Đối với tay trái, cần thêm phép gương theo trục $x$:
+\[
+R_{\text{mirror}} = \begin{bmatrix}
+-1 & 0 & 0 \\
+0 & 1 & 0 \\
+0 & 0 & 1
+\end{bmatrix}.
+\]
+
+Phép biến đổi tổng quát từ không gian landmark sang không gian model:
+\[
+\mathbf{p}_{\text{model}} = R_{\text{scene}} \cdot R_{\text{mirror}} \cdot \mathbf{p}_{\text{camera}},
+\]
+với $R_{\text{mirror}} = I$ nếu là tay phải.
+
+\subsection{Tính quaternion local cho từng bone}
+
+Với mỗi cặp landmarks liên tiếp $(i, j)$ trong chuỗi ngón tay,
+vector hướng được tính bằng:
+\[
+\mathbf{d}_{ij} = \mathbf{p}_j - \mathbf{p}_i,
+\]
+sau đó chuyển đổi sang không gian model:
+\[
+\mathbf{d}'_{ij} = R_{\text{scene}} \cdot R_{\text{mirror}} \cdot \mathbf{d}_{ij}.
+\]
+
+Quaternion local của bone tương ứng được xác định bằng phép quay ngắn nhất
+từ hướng chuẩn \texttt{bone\_dir} $= (0, 1, 0)^\top$ (hướng dương trục $y$ trong local space)
+sang hướng quan sát $\hat{\mathbf{d}}'_{ij}$ (đã chuẩn hóa):
+\[
+\begin{aligned}
+\mathbf{a} &= \texttt{bone\_dir} \times \hat{\mathbf{d}}'_{ij}, \\
+\theta &= \arccos(\texttt{bone\_dir} \cdot \hat{\mathbf{d}}'_{ij}), \\
+\mathbf{q} &= \left[\mathbf{a} \cdot \sin\left(\tfrac{\theta}{2}\right), \cos\left(\tfrac{\theta}{2}\right)\right].
+\end{aligned}
+\]
+
+Trường hợp đặc biệt: nếu tay trái, ma trận quay của root bone cũng cần được mirror:
+\[
+R_{\text{root}}^{\text{left}} = R_{\text{mirror}} \cdot R_{\text{root}}^{\text{right}} \cdot R_{\text{mirror}}.
+\]
+
+\subsection{Forward kinematics}
+
+Vị trí global của từng bone được tính tuần tự theo thứ tự phân cấp.
+Gọi $\ell_b$ là độ dài rest (trong bind pose) của bone $b$,
+vị trí của bone con được xác định:
+\[
+\mathbf{p}_{\text{child}}^{\text{global}} = \mathbf{p}_{\text{parent}}^{\text{global}} 
++ R_{\text{parent}}^{\text{global}} \cdot (\hat{\mathbf{d}}'_{\text{parent}} \cdot \ell_b),
+\]
+trong đó $R_{\text{parent}}^{\text{global}}$ là tích lũy các quaternion từ root xuống parent,
+và $\hat{\mathbf{d}}'_{\text{parent}}$ là hướng đã chuẩn hóa của bone parent.
+
+Kết quả retargeting bao gồm hai thành phần:
+\begin{itemize}
+    \item $\mathcal{P}_{\text{global}} = \{\texttt{bone\_name} \mapsto \mathbf{p}^{\text{global}}\}$:
+          toạ độ 3D của từng bone trong scene space,
+    \item $\mathcal{Q}_{\text{local}} = \{\texttt{bone\_name} \mapsto \mathbf{q}\}$:
+          quaternion local cho từng bone.
+\end{itemize}
+
+Dữ liệu này được tuần tự hóa thành JSON và truyền qua WebSocket đến client 3D (Three.js)
+với tần suất 30 khung hình/giây, cho phép hiển thị chuyển động thời gian thực.

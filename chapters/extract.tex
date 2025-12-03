@@ -1,0 +1,166 @@
+\section{Trích xuất chuyển động từ ảnh}
+
+Sau khi các landmarks đã được xác định bởi MediaPipe (như trình bày trong Chương 3),
+bước kế tiếp là trích xuất thông tin về sự thay đổi vị trí của chúng theo thời gian.  
+Mục tiêu của giai đoạn này là xây dựng một biểu diễn định lượng cho chuyển động của bàn tay,
+thông qua các đại lượng như \textbf{vector dịch chuyển}, \textbf{vận tốc}, và \textbf{hướng chuyển động}.
+
+Quá trình này được thực hiện bằng thuật toán \textbf{Lucas–Kanade Optical Flow}~\cite{lucas1981iterative}
+trong không gian pixel.
+Trước khi áp dụng, landmarks chuẩn hóa từ MediaPipe được chuyển về toạ độ pixel:
+\[
+(u_i, v_i) = (x_i \cdot W,\, y_i \cdot H),
+\]
+với $W = 1280$, $H = 720$ là kích thước khung hình.
+\subsection{Nguyên lý và mô hình toán học}
+
+Giả sử $I(x,y,t)$ là cường độ sáng của điểm ảnh tại thời điểm $t$.  
+Khi bàn tay di chuyển, cùng một điểm vật lý trong không gian sẽ xuất hiện tại vị trí $(x+u, y+v)$
+ở khung hình kế tiếp $t+\Delta t$, với $(u,v)$ là vector dịch chuyển cục bộ.  
+Giả định cường độ sáng không đổi dẫn tới ràng buộc:
+\[
+I(x, y, t) = I(x + u, y + v, t + \Delta t).
+\]
+Khai triển Taylor và bỏ qua các bậc cao hơn, ta thu được phương trình quang học cơ bản:
+\[
+\frac{\partial I}{\partial x}u +
+\frac{\partial I}{\partial y}v +
+\frac{\partial I}{\partial t} = 0.
+\]
+Đây là nền tảng của phương pháp Lucas–Kanade,
+trong đó $(u,v)$ được coi là không đổi trong một cửa sổ nhỏ quanh mỗi điểm mốc,
+và được xác định bằng cách cực tiểu hoá sai số bình phương
+giữa hai khung hình liên tiếp.
+
+\subsection{Phương pháp Lucas–Kanade cục bộ}
+
+Tại mỗi landmark $(x_i, y_i)$,
+ta xét tập hợp các điểm $(x_j, y_j)$ trong cửa sổ kích thước $k \times k$ xung quanh nó.
+Hệ phương trình tuyến tính được thiết lập:
+\[
+A_i
+\begin{bmatrix}
+u_i \\ v_i
+\end{bmatrix}
+ = -b_i,
+\qquad
+A_i =
+\begin{bmatrix}
+\frac{\partial I}{\partial x}(x_1, y_1) & \frac{\partial I}{\partial y}(x_1, y_1) \\
+\vdots & \vdots \\
+\frac{\partial I}{\partial x}(x_n, y_n) & \frac{\partial I}{\partial y}(x_n, y_n)
+\end{bmatrix},
+\quad
+b_i =
+\begin{bmatrix}
+\frac{\partial I}{\partial t}(x_1, y_1) \\ \vdots \\ \frac{\partial I}{\partial t}(x_n, y_n)
+\end{bmatrix}.
+\]
+Vector dịch chuyển $(u_i, v_i)$ được tính bằng nghiệm tối thiểu bình phương:
+\[
+\begin{bmatrix}
+u_i \\ v_i
+\end{bmatrix}
+ = - (A_i^\top A_i)^{-1} A_i^\top b_i.
+\]
+Các giá trị $(u_i, v_i)$ biểu diễn chuyển động biểu kiến của landmark $i$
+trên mặt phẳng ảnh giữa hai khung hình liên tiếp.
+
+\subsection{Tính vận tốc và hướng chuyển động}
+
+Từ các giá trị dịch chuyển $(u_i, v_i)$,
+ta có thể suy ra độ lớn và hướng của chuyển động:
+\[
+\text{speed}_i = \sqrt{u_i^2 + v_i^2}, \qquad
+\text{angle}_i = \operatorname{atan2}(v_i, u_i).
+\]
+Để giảm nhiễu, các vector dịch chuyển được làm trơn bằng trung bình trượt trên $N$ khung hình gần nhất:
+\[
+\bar{u}_i = \frac{1}{N}\sum_{k=1}^{N} u_{i,k}, \qquad
+\bar{v}_i = \frac{1}{N}\sum_{k=1}^{N} v_{i,k},
+\]
+với $N \le 5$.  
+Từ đó, vận tốc và hướng trung bình được xác định:
+\[
+\overline{\text{speed}}_i = \sqrt{\bar{u}_i^2 + \bar{v}_i^2}, \qquad
+\overline{\text{angle}}_i = \operatorname{atan2}(\bar{v}_i, \bar{u}_i).
+\]
+Nếu tại một khung hình optical flow không thu được kết quả hợp lệ,
+giá trị của landmark được giữ nguyên hoặc thay bằng trung bình gần nhất
+để đảm bảo tính liên tục của quỹ đạo.
+
+
+\section{Trích xuất phép quay giữa các khung hình}
+
+Sau khi có landmarks 3D (đã dịch về gốc wrist như mô tả ở Chương 3),
+bước tiếp theo là ước lượng sự thay đổi định hướng (orientation) của bàn tay
+giữa hai khung hình liên tiếp.  
+
+Trong nghiên cứu này, phép quay toàn cục (root rotation) được trích xuất
+bằng phương pháp \textbf{Kabsch}~\cite{kabsch1976solution},
+một kỹ thuật tuyến tính ổn định cho bài toán căn chỉnh cứng (rigid alignment).
+Để giảm nhiễu và tập trung vào cấu trúc lòng bàn tay,
+ta chỉ sử dụng \textbf{ba điểm đại diện} thay vì toàn bộ 21 landmarks.
+
+\subsection{Mô hình bài toán}
+
+Gọi $\mathcal{P} = \{p_W, p_I, p_P\}$ là tập ba điểm đại diện
+(wrist, index MCP, pinky MCP tương ứng với ID $\{0, 5, 17\}$)
+ở frame đầu tiên (bind pose), và
+$\mathcal{Q} = \{q_W, q_I, q_P\}$ là ba điểm tương ứng
+ở frame hiện tại,
+với các điểm $p_i, q_i \in \mathbb{R}^3$ đã được dịch về gốc wrist.
+
+Mục tiêu là tìm ma trận quay $R \in SO(3)$ 
+sao cho sai số bình phương giữa hai tập điểm được tối thiểu hoá:
+\[
+E(R) = \sum_{i \in \{W,I,P\}} \| q_i - R p_i \|^2.
+\]
+Do đã dịch về gốc wrist, thành phần tịnh tiến $t = 0$.
+
+\subsection{Giải thuật Kabsch}
+
+Bài toán trên được giải bằng cách trước hết đưa hai tập điểm về cùng trọng tâm (centroid):
+\[
+\tilde{p}_i = p_i - \bar{p}, \qquad 
+\tilde{q}_i = q_i - \bar{q},
+\]
+trong đó $\bar{p} = \frac{1}{3}(p_W + p_I + p_P)$ và $\bar{q} = \frac{1}{3}(q_W + q_I + q_P)$
+là trọng tâm của tam giác tạo bởi ba điểm.
+
+Ma trận hiệp phương sai (cross-covariance) được xác định bởi:
+\[
+H = \tilde{P}^\top \tilde{Q}
+= \begin{bmatrix}
+\tilde{p}_W^\top \\ \tilde{p}_I^\top \\ \tilde{p}_P^\top
+\end{bmatrix}
+\begin{bmatrix}
+\tilde{q}_W & \tilde{q}_I & \tilde{q}_P
+\end{bmatrix}
+\in \mathbb{R}^{3 \times 3}.
+\]
+
+Thực hiện phân rã giá trị rieng suy biến (SVD):
+\[
+H = U S V^\top.
+\]
+Khi đó, ma trận quay tối ưu được tính bằng~\cite{kabsch1976solution}:
+\[
+R = V U^\top.
+\]
+Nếu $\det(R) < 0$, 
+cột cuối của $V$ được đổi dấu để đảm bảo $R \in SO(3)$.
+
+\subsection{Ý nghĩa hình học}
+
+Ma trận $R$ biểu diễn sự quay toàn cục (root rotation) của bàn tay
+giữa frame hiện tại so với bind pose ban đầu.
+Đây chính là thông tin định hướng (orientation) của toàn bộ bàn tay trong không gian 3D.
+
+Trong pipeline của hệ thống:
+\begin{itemize}
+    \item Ma trận $R$ được chuyển thành quaternion $\mathbf{q}_{\text{root}}$ để truyền đến client 3D.
+    \item Quaternion này được làm mượt bằng SLERP (Spherical Linear Interpolation)~\cite{shoemake1985animating}
+          để giảm nhiễu cao tần giữa các frame liên tiếp.
+    \item Kết quả được sử dụng làm root rotation cho skeleton trong Chương 5.
+\end{itemize}

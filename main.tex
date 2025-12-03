@@ -1,0 +1,119 @@
+\documentclass[a4paper, 14pt]{report}
+\synctex=1
+
+% Font và tiếng Việt
+\usepackage[utf8]{inputenc}
+\usepackage[utf8]{vietnam}
+
+% Layout và giãn cách
+\usepackage[left=2.5cm, right=2cm, top=2cm, bottom=2.5cm]{geometry}
+\usepackage{setspace}
+\setstretch{1.5}                       % Giãn dòng 1.5
+\setlength{\parindent}{0pt}           % Không thụt đầu dòng
+\setlength{\parskip}{1em}             % Cách đoạn 1em
+
+% Font size theo KOMA-Script
+\usepackage[fontsize=14pt]{scrextend}
+
+% Hyperref
+\usepackage[unicode]{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=blue
+}
+
+% Các package toán học và thuật toán
+\usepackage{amsmath, amsfonts, amssymb, amsthm, mathtools}
+\usepackage{algorithm, algorithmic}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+
+% Định lý và định nghĩa
+\theoremstyle{definition}
+\newtheorem{definition}{Định nghĩa}[section]
+\newtheorem{lemma}[definition]{Bổ đề}
+\newtheorem{proposition}[definition]{Mệnh đề}
+
+% TikZ và vẽ hình
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{calc, positioning, arrows.meta}
+
+% Hình ảnh và minh họa
+\usepackage{graphicx, subcaption, float, animate}
+\graphicspath{{images/}}
+
+% Chú thích
+\usepackage{caption}
+\usepackage{xcolor}
+\definecolor{myred}{HTML}{581000}
+
+% Gọi tiêu đề
+\usepackage{titlesec}
+\titleformat{\chapter}
+  {\normalfont\Large\bfseries}{\thechapter}{1em}{}
+\titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{3}
+
+% Listings và mã nguồn
+\usepackage{listings}
+
+% Nomenclature
+\usepackage{nomencl}
+\makenomenclature
+
+% Tài liệu tham khảo
+\usepackage[
+    sorting=none,
+    backend=biber,
+    style=numeric
+]{biblatex}
+\addbibresource{references.bib}
+
+% Định dạng chỉ số
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+% Bắt đầu văn bản
+\begin{document}
+\renewcommand{\thepage}{\roman{page}}
+
+\input{chapters/title}
+
+\newpage
+\setlength{\parskip}{0pt}
+% \input{chapters/thanks.tex}
+
+\tableofcontents
+
+\newpage
+\clearpage
+\setcounter{page}{1}
+\setcounter{chapter}{0}
+\renewcommand{\thepage}{\arabic{page}}
+\setlength{\parskip}{1em}
+
+\chapter{Giới thiệu vấn đề}
+\input{chapters/intro}
+
+\chapter{Kiến thức chuẩn bị}
+\input{chapters/knowledge}
+
+\chapter{Bài toán nhận diện các điểm mốc trên bàn tay}
+\input{chapters/landmark_detection.tex}
+
+\chapter{Trích xuất các tác động lên các điểm}
+\input{chapters/extract.tex}
+
+\chapter{Bài toán gán các điểm mốc vào mô hình bàn tay 3D}
+\input{chapters/mapping.tex}
+
+\chapter{Nhận xét và kết luận}
+\input{chapters/conclusion.tex}
+
+\printbibliography
+
+\end{document}
