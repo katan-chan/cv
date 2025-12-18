@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.18)  18 DEC 2025 15:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2025.12.18)  18 DEC 2025 15:25
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1298,12 +1298,11 @@ Package biblatex Info: Automatic encoding selection.
 \openout5 = `main.bcf'.
 
 Package biblatex Info: Trying to load bibliographic data...
-Package biblatex Info: ... file 'main.bbl' not found.
-
-No file main.bbl.
+Package biblatex Info: ... file 'main.bbl' found.
+ (main.bbl)
 Package biblatex Info: Reference section=0 on input line 81.
 Package biblatex Info: Reference segment=0 on input line 81.
-(chapters/title.tex
+ (chapters/title.tex
 
 LaTeX Font Warning: Font shape `T5/cmr/bx/sc' undefined
 (Font)              using `T5/cmr/bx/n' instead on input line 21.
@@ -1359,7 +1358,13 @@ LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <16.79996> not available
 LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <16.79996> not available
 (Font)              size <17.28> substituted on input line 69.
 
-[5] [6]) [7]
+[5] [6]
+<figures/axisAngle1.png, id=78, 340.27126pt x 292.09125pt>
+File: figures/axisAngle1.png Graphic file (type png)
+<use figures/axisAngle1.png>
+Package pdftex.def Info: figures/axisAngle1.png  used on input line 140.
+(pdftex.def)             Requested size: 234.73524pt x 201.4986pt.
+) [7 <./figures/axisAngle1.png>]
 Ch\uhorn \ohorn ng 3.
 (chapters/landmark_detection.tex [8
 
@@ -1367,7 +1372,7 @@ Ch\uhorn \ohorn ng 3.
 
 LaTeX Warning: Reference `fig:hand_landmark' on page 11 undefined on input line 128.
 
-<figures/HandLandmarks.png, id=105, 1050.92625pt x 453.695pt>
+<figures/HandLandmarks.png, id=109, 1050.92625pt x 453.695pt>
 File: figures/HandLandmarks.png Graphic file (type png)
 <use figures/HandLandmarks.png>
 Package pdftex.def Info: figures/HandLandmarks.png  used on input line 132.
@@ -1375,12 +1380,8 @@ Package pdftex.def Info: figures/HandLandmarks.png  used on input line 132.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[11] [12 <./figures/HandLandmarks.png (PNG copy)>]
-
-LaTeX Warning: Citation 'mediapipe2020' on page 13 undefined on input line 179.
-
-[13]
-<figures/mediapipe_hand_landmarks.png, id=133, 964.8045pt x 561.89925pt>
+[11] [12 <./figures/HandLandmarks.png (PNG copy)>] [13]
+<figures/mediapipe_hand_landmarks.png, id=139, 964.8045pt x 561.89925pt>
 File: figures/mediapipe_hand_landmarks.png Graphic file (type png)
 <use figures/mediapipe_hand_landmarks.png>
 Package pdftex.def Info: figures/mediapipe_hand_landmarks.png  used on input line 224.
@@ -1388,137 +1389,63 @@ Package pdftex.def Info: figures/mediapipe_hand_landmarks.png  used on input lin
 ) [14] [15 <./figures/mediapipe_hand_landmarks.png>]
 Ch\uhorn \ohorn ng 4.
 (chapters/extract.tex
-
-LaTeX Warning: Citation 'lucas1981iterative' on page 16 undefined on input line 8.
-
-
-Overfull \hbox (125.46178pt too wide) in paragraph at lines 8--11
-[]\T5/cmr/m/n/14 Qu¡ tr¼nh n y ^^_÷ñc thüc hi»n b¬ng thuªt to¡n \T5/cmr/bx/n/14 Lu-cas^^UKanade Op-ti-cal Flow \T5/cmr/m/n/14 [[]]
+Overfull \hbox (9.51376pt too wide) in paragraph at lines 8--11
+[]\T5/cmr/m/n/14 Qu¡ tr¼nh n y ^^_÷ñc thüc hi»n b¬ng thuªt to¡n \T5/cmr/bx/n/14 Lu-cas^^UKanade Op-ti-cal Flow \T5/cmr/m/n/14 [[][]2[][]]
  []
 
 [16
 
 ] [17]
-<figures/optical_flow_visualization.png, id=164, 389.95688pt x 301.8778pt>
+<figures/optical_flow_visualization.png, id=171, 389.95688pt x 301.8778pt>
 File: figures/optical_flow_visualization.png Graphic file (type png)
 <use figures/optical_flow_visualization.png>
 Package pdftex.def Info: figures/optical_flow_visualization.png  used on input line 95.
 (pdftex.def)             Requested size: 375.57782pt x 290.75749pt.
-
-
-LaTeX Warning: Citation 'kabsch1976solution' on page 18 undefined on input line 107.
-
-[18] [19 <./figures/optical_flow_visualization.png>]
-
-LaTeX Warning: Citation 'kabsch1976solution' on page 20 undefined on input line 154.
-
-[20]
-
-LaTeX Warning: Citation 'shoemake1985animating' on page 21 undefined on input line 170.
-
-) [21]
+ [18] [19 <./figures/optical_flow_visualization.png>] [20]) [21]
 Ch\uhorn \ohorn ng 5.
 (chapters/mapping.tex
 LaTeX Font Info:    Trying to load font information for T5+cmtt on input line 5.
  (C:\Users\ASUS\AppData\Local\Programs\MiKTeX\tex/latex/vntex\t5cmtt.fd
 File: t5cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-<figures/hand_skeleton.png, id=191, 147.55125pt x 210.7875pt>
+<figures/hand_skeleton.png, id=203, 147.55125pt x 210.7875pt>
 File: figures/hand_skeleton.png Graphic file (type png)
 <use figures/hand_skeleton.png>
 Package pdftex.def Info: figures/hand_skeleton.png  used on input line 15.
-(pdftex.def)             Requested size: 281.68515pt x 402.45917pt.
+(pdftex.def)             Requested size: 140.84258pt x 201.20868pt.
  [22
 
-] [23 <./figures/hand_skeleton.png>]
+]
 Overfull \hbox (13.24147pt too wide) in paragraph at lines 38--41
 \T5/cmr/m/n/14 Têng ^^_ë d i tø cê tay tîi ^^_¦u ngân giúa (chuéi \T5/cmtt/m/n/14 Bone008_08 \T5/cmr/m/n/14 ^^_¸n \T5/cmtt/m/n/14 Bone011_end_022\T5/cmr/m/n/14 )
  []
 
 
-LaTeX Warning: Reference `tab:hand_skeleton' on page 24 undefined on input line 49.
+LaTeX Warning: Reference `tab:hand_skeleton' on page 23 undefined on input line 49.
 
 
 Overfull \hbox (31.41675pt too wide) in paragraph at lines 49--52
 \T5/cmr/m/n/14 kho£ng ^^_ë d i t÷ìng ^^_èi cõa c¡c ^^_o¤n (theo dú li»u trong \T5/cmtt/m/n/14 skeleton_metadata.json\T5/cmr/m/n/14 ). 
  []
 
-[24]
+[23 <./figures/hand_skeleton.png>] [24]
 Overfull \hbox (0.45819pt too wide) in paragraph at lines 99--99
 |[]\T5/cmr/bx/n/20.16003 Retargeting tø land-marks 3D sang mæ h¼nh
  []
 
-[25] [26] [27] [28] [29]) [30]
+[25] [26] [27] [28]) [29]
 Ch\uhorn \ohorn ng 6.
 (chapters/conclusion.tex
-<figures/result.png, id=262, 557.6835pt x 338.4645pt>
+<figures/result.png, id=269, 557.6835pt x 338.4645pt>
 File: figures/result.png Graphic file (type png)
 <use figures/result.png>
 Package pdftex.def Info: figures/result.png  used on input line 7.
 (pdftex.def)             Requested size: 375.57782pt x 227.95271pt.
+ [30
 
-
-LaTeX Warning: Citation 'mediapipe2020' on page 31 undefined on input line 12.
-
-
-LaTeX Warning: Citation 'lucas1981iterative' on page 31 undefined on input line 16.
-
-
-LaTeX Warning: Citation 'kabsch1976solution' on page 31 undefined on input line 20.
-
-
-LaTeX Warning: Citation 'shoemake1985animating' on page 31 undefined on input line 23.
-
-
-Overfull \hbox (23.64058pt too wide) in paragraph at lines 20--25
-[]\T5/cmr/bx/n/14 ×îc l÷ñng root ro-ta-tion\T5/cmr/m/n/14 : Sû döng thuªt to¡n Kab-sch [[]]
- []
-
-
-Overfull \hbox (92.38574pt too wide) in paragraph at lines 20--25
-\T5/cmr/m/n/14 to n cöc vîi ^^_ë ên ^^_ành cao. Quater-nion thu ^^_÷ñc qua SLERP [[]]
- []
-
-[31
+] [31 <./figures/result.png>]) [32] [33
 
 ]
-
-LaTeX Warning: Citation 'shoemake1985animating' on page 32 undefined on input line 41.
-
-
-LaTeX Warning: Citation 'kabsch1976solution' on page 32 undefined on input line 43.
-
-
-LaTeX Warning: Citation 'mediapipe2020' on page 32 undefined on input line 44.
-
-[32 <./figures/result.png>]
-
-LaTeX Warning: Citation 'lucas1981iterative' on page 33 undefined on input line 49.
-
-
-LaTeX Warning: Citation 'kabsch1976solution' on page 33 undefined on input line 49.
-
-
-LaTeX Warning: Citation 'shoemake1985animating' on page 33 undefined on input line 49.
-
-
-LaTeX Warning: Citation 'mediapipe2020' on page 33 undefined on input line 49.
-
-
-Overfull \hbox (55.33801pt too wide) in paragraph at lines 49--50
-\T5/cmr/m/n/14 H» thèng ^^_÷ñc x¥y düng theo ^^_óng n·n t£ng to¡n håc (op-ti-cal flow [[]],
- []
-
-
-Overfull \hbox (21.61302pt too wide) in paragraph at lines 49--50
-\T5/cmr/m/n/14 Kab-sch [[]], quater-nion/SLERP [[]])
- []
-
-)
-
-LaTeX Warning: Empty bibliography on input line 117.
-
-[33]
 
 LaTeX Warning: Hook 'shipout/lastpage' executed on wrong page (1 not 35).
                Rerun to correct this.
@@ -1560,17 +1487,17 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 47049 strings out of 474485
- 1040609 string characters out of 5744205
+ 47103 strings out of 474485
+ 1042162 string characters out of 5744205
  1978123 words of memory out of 5000000
- 68526 multiletter control sequences out of 15000+600000
+ 68572 multiletter control sequences out of 15000+600000
  580790 words of font info for 87 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 110i,12n,107p,771b,1532s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 110i,12n,107p,771b,1559s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\ASUS\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1440.pk><C:/Users/ASUS/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/ASUS/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/ASUS/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/ASUS/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/ASUS/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/ASUS/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/ASUS/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/ASUS/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/ASUS/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Users/ASUS/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Users/ASUS/AppData/Local/Programs/MiKTeX/fonts/type1/vntex/vnr/vnbx12.pfb><C:/Users/ASUS/AppData/Local/Programs/MiKTeX/fonts/type1/vntex/vnr/vncsc10.pfb><C:/Users/ASUS/AppData/Local/Programs/MiKTeX/fonts/type1/vntex/vnr/vnr10.pfb><C:/Users/ASUS/AppData/Local/Programs/MiKTeX/fonts/type1/vntex/vnr/vnr12.pfb><C:/Users/ASUS/AppData/Local/Programs/MiKTeX/fonts/type1/vntex/vnr/vnr17.pfb><C:/Users/ASUS/AppData/Local/Programs/MiKTeX/fonts/type1/vntex/vnr/vnsl12.pfb><C:/Users/ASUS/AppData/Local/Programs/MiKTeX/fonts/type1/vntex/vnr/vnti12.pfb><C:/Users/ASUS/AppData/Local/Programs/MiKTeX/fonts/type1/vntex/vnr/vntt10.pfb><C:/Users/ASUS/AppData/Local/Programs/MiKTeX/fonts/type1/vntex/vnr/vntt12.pfb>
-Output written on main.pdf (35 pages, 2353381 bytes).
+Output written on main.pdf (35 pages, 2381107 bytes).
 PDF statistics:
- 388 PDF objects out of 1000 (max. 8388607)
- 100 named destinations out of 1000 (max. 500000)
- 49 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 413 PDF objects out of 1000 (max. 8388607)
+ 106 named destinations out of 1000 (max. 500000)
+ 54 words of extra memory for PDF output out of 10000 (max. 10000000)
 

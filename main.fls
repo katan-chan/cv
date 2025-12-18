@@ -423,6 +423,11 @@ INPUT C:\Users\ASUS\AppData\Local\Programs\MiKTeX\tex\latex\biblatex\lbx\english
 INPUT C:\Users\ASUS\AppData\Local\Programs\MiKTeX\tex\latex\biblatex\lbx\english.lbx
 INPUT C:\Users\ASUS\AppData\Local\Programs\MiKTeX\tex\latex\biblatex\lbx\english.lbx
 OUTPUT main.bcf
+INPUT main.bbl
+INPUT .\main.bbl
+INPUT .\main.bbl
+INPUT .\main.bbl
+INPUT main.bbl
 INPUT .\chapters\title.tex
 INPUT .\chapters\title.tex
 INPUT .\chapters\title.tex
@@ -497,6 +502,13 @@ INPUT C:\Users\ASUS\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symb
 INPUT C:\Users\ASUS\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx12.tfm
 INPUT C:\Users\ASUS\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx10.tfm
 INPUT C:\Users\ASUS\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx7.tfm
+INPUT .\figures\axisAngle1.png
+INPUT .\figures\axisAngle1.png
+INPUT .\figures\axisAngle1.png
+INPUT .\figures\axisAngle1.png
+INPUT .\figures\axisAngle1.png
+INPUT .\figures\axisAngle1.png
+INPUT .\figures\axisAngle1.png
 INPUT .\chapters\landmark_detection.tex
 INPUT .\chapters\landmark_detection.tex
 INPUT chapters\landmark_detection.tex

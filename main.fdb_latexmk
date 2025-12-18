@@ -1,12 +1,12 @@
 # Fdb version 4
-["biber main"] 0 "main.bcf" "main.bbl" "main" 1766045060.72251 -1
-  "main.bcf" 1766045060 108064 3e07739a64178bc35f2190d8452cc140 "pdflatex"
+["biber main"] 1766046216.97056 "main.bcf" "main.bbl" "main" 1766046321.61124 0
+  "main.bcf" 1766046321 108064 3e07739a64178bc35f2190d8452cc140 "pdflatex"
   "references.bib" 1764727069 1230 b6bcb81d8c9e5f48bb12e8fe502d7e2d ""
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1766045056.94126 "d:/cv/main.tex" "main.pdf" "main" 1766045060.72354 2
+["pdflatex"] 1766046317.33705 "d:/cv/main.tex" "main.pdf" "main" 1766046321.61194 2
   "C:/Users/ASUS/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1766032470 88371 b965f57369ed322039596060d18f4416 ""
   "C:/Users/ASUS/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm1440.pk" 1766032475 16968 7071c41b0618be80731bef003a91d6ba ""
   "C:/Users/ASUS/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1766032367 24224616 45612a2240d0106989eaec6e5aadcfd8 ""
@@ -287,22 +287,23 @@
   "chapters/conclusion.tex" 1766028913 3724 7ed2fb3c57e6222c713444ffa6c781bd ""
   "chapters/extract.tex" 1766028913 7621 df8d5227fecf091f72316d1ee1422e22 ""
   "chapters/intro.tex" 1766028913 2660 885fb5c5ce7e58f8d457436d14010467 ""
-  "chapters/knowledge.tex" 1764727069 5459 8ff0c0813ba361e35654cc86fb0476fd ""
+  "chapters/knowledge.tex" 1766046311 5638 980f2e2c3c372d3af7e2ea0f3dbb1b98 ""
   "chapters/landmark_detection.tex" 1766030747 10877 dbf6d199acda5de82c1816b41eef554f ""
-  "chapters/mapping.tex" 1766044957 10846 20a08b61968fff5f9625472f2085327d ""
+  "chapters/mapping.tex" 1766046216 10846 536844d29cb3759f299717f307576c5a ""
   "chapters/title.tex" 1764727069 1759 791f2d262a7fc77a842be0f94c10cbde ""
   "d:/cv/main.tex" 1766030919 2944 cc6d7813d7fad5de418fed1747b007c6 ""
   "figures/HandLandmarks.png" 1766028913 257580 4b21502937d14c1d7c7ea03d18d725b0 ""
+  "figures/axisAngle1.png" 1766046237 23282 82b3900691a380149ce4a4d9cb05e820 ""
   "figures/hand_skeleton.png" 1766030798 42054 c66547b02c45304ca93e343cbdfc9d1c ""
   "figures/mediapipe_hand_landmarks.png" 1766030711 1106728 2b9b96aeb29bcdfa77744fbc07400993 ""
   "figures/optical_flow_visualization.png" 1766028913 278824 4e2ee87fe16a84469f6e41298c187f96 ""
   "figures/result.png" 1766044848 84515 27434a8f7b3ca9254496347a00e8ddc9 ""
   "logo.jpg" 1764727069 64031 c47850c55ceda330021262f08bcdc8e7 ""
-  "main.aux" 1766045060 11872 9c288ae701efdf8112db172f7510de44 "pdflatex"
-  "main.bbl" 0 -1 0 "biber main"
-  "main.out" 1766045060 10848 d6af3fa9de11a8135ab91b76a48f6246 "pdflatex"
+  "main.aux" 1766046321 12353 e61ed8a137f484ed8a261179da72002e "pdflatex"
+  "main.bbl" 1766046224 6991 09bb1aa9bf363341fc0aad1cbc63dea7 "biber main"
+  "main.out" 1766046321 10848 d6af3fa9de11a8135ab91b76a48f6246 "pdflatex"
   "main.tex" 1766030919 2944 cc6d7813d7fad5de418fed1747b007c6 ""
-  "main.toc" 1766045060 4962 2b0cecdb0150b0308df12fee1ee3ad05 "pdflatex"
+  "main.toc" 1766046321 4962 cfa07e767875b26dbba0c756a9e80081 "pdflatex"
   (generated)
   "main.aux"
   "main.bcf"
