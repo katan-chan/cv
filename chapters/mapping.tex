@@ -1,18 +1,18 @@
 \section{Không gian và cấu trúc khung xương của mô hình bàn tay}
 
-Mô hình bàn tay được biểu diễn dưới dạng hệ xương phân cấp (skeletal hierarchy),
-trong đó mỗi khớp (bone) được mô tả bởi ba thành phần:
+Mô hình bàn tay được biểu diễn dưới dạng hệ xương phân cấp,
+trong đó mỗi khớp được mô tả bởi ba thành phần:
 tên khớp, khớp cha (\texttt{parent}), 
 vị trí tương đối so với khớp cha (\texttt{position}) 
 và quaternion quay cục bộ (\texttt{quaternion}).
 Tập dữ liệu \texttt{skeleton\_metadata.json} chứa tổng cộng 26 nút:
 một nút gốc \texttt{\_rootJoint}, 
 một nút trung tâm \texttt{Bone\_00},
-và 24 khớp còn lại thuộc năm ngón tay.
+và 24 khớp còn lại thuộc năm ngón tay, trong đó mỗi ngón tay bao chia đều cho 5 ngón tay, riêng ngón cái chỉ có 4 khớp.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.6\textwidth]{figs/hand_skeleton.png}
+    \includegraphics[width=0.6\textwidth]{figures/hand_skeleton.png}
     \caption{Cấu trúc khung xương bàn tay trong mô hình 3D}
     \label{fig:hand_skeleton}
 \end{figure}
