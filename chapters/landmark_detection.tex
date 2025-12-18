@@ -57,7 +57,7 @@ và $(f_x, f_y)$ là tiêu cự tính theo đơn vị pixel.
 Mặt phẳng ảnh $\mathcal{I}$ do đó là không gian hai chiều $\mathbb{R}^2$, 
 biểu diễn dữ liệu thu được từ camera.
 
-\subsection{Không gian chuẩn hoá (Normalized Landmark Space)}
+\subsection{Normalized Landmark Space}
 
 Trong MediaPipe, các toạ độ ảnh được chuẩn hoá theo kích thước khung hình:
 \[
@@ -78,7 +78,7 @@ sau khi đã dịch về gốc cổ tay.
 
 \subsection{Từ không gian chuẩn hóa đến không gian làm việc 3D}
 
-Để phục vụ cho các thuật toán xử lý hình học (Kabsch, optical flow, retargeting),
+Để phục vụ cho các thuật toán xử lý hình học,
 ta cần chuyển landmarks từ không gian chuẩn hóa sang không gian làm việc 3D.
 
 \textbf{Bước 1: Dịch gốc về wrist.}
@@ -116,11 +116,23 @@ Mỗi tầng mô tả một mức trừu tượng khác nhau của cùng một �
 từ vị trí vật lý trong thế giới thật đến biểu diễn số học dùng trong mô hình học sâu.
 
 
+
 \section{Bài toán phát hiện landmarks trên ảnh}
 
 Mục tiêu của bài toán là xác định vị trí của một tập hợp các điểm đặc trưng (landmarks) 
 trên ảnh hai chiều thu được từ camera, 
 chẳng hạn các khớp trên bàn tay, các đặc trưng khuôn mặt, hoặc vị trí các bộ phận cơ thể.
+
+\subsection{Cấu trúc hình học của bàn tay}
+
+Cấu trúc xương của bàn tay nhận diện từ ảnh được biểu diễn dưới dạng một khung xương gồm 21 điểm. Cấu trúc này bắt đầu từ điểm gốc tại cổ tay (wrist) và phân nhánh thành năm ngón tay. Mỗi ngón tay được biểu diễn bởi bốn điểm khớp nối tiếp: khớp đốt bàn ngón (MCP), khớp liên đốt gần (PIP), khớp liên đốt xa (DIP) và đầu ngón tay (TIP). Cách biểu diễn này giúp nắm bắt đầy đủ các bậc tự do chuyển động, cho phép suy luận chính xác về tư thế và cử chỉ của bàn tay từ dữ liệu hình ảnh (xem Hình \ref{fig:hand_landmark}).
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/HandLandmarks.png}
+    \caption{Sơ đồ cấu trúc các điểm đặc trưng trên bàn tay.}
+    \label{fig:hand_landmark}
+\end{figure}
 
 \subsection{Đầu vào và đầu ra của mô hình}
 
@@ -172,7 +184,7 @@ và hỗ trợ nhiều tác vụ khác nhau như phát hiện khuôn mặt, bàn
 theo dõi tư thế (pose tracking), và phân tích cử chỉ.
 
 Trong phạm vi nghiên cứu này, MediaPipe được sử dụng để 
-	extbf{phát hiện và trích xuất các điểm đặc trưng (landmarks) của bàn tay}
+phát hiện và trích xuất các điểm đặc trưng của bàn tay
 từ ảnh hoặc video đầu vào thu được qua camera.
 
 \subsection{Luồng hoạt động và mô hình sử dụng}
@@ -206,6 +218,13 @@ Luồng xử lý khung hình có thể tóm tắt như sau:
 \]
 
 \subsection{Đánh giá và nhận xét}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/mediapipe_hand_landmarks.png}
+    \caption{Ví dụ phát hiện landmarks bàn tay sử dụng MediaPipe.}
+    \label{fig:mediapipe_hand}
+\end{figure}
 
 MediaPipe đạt tốc độ xử lý cao (30–60 khung hình/giây) 
 và hoạt động ổn định trên cả CPU lẫn GPU, 

@@ -5,3 +5,17 @@ Trong các lĩnh vực như đồ họa máy tính, hoạt hình 3D, thực tế
 Dữ liệu thu được từ camera hoặc cảm biến thường chỉ bao gồm tập hợp các điểm mốc (landmarks) trong không gian, không mang thông tin về hướng quay hay cấu trúc xương. Bài toán được đặt ra là khôi phục các phép biến đổi hình học cứng (gồm quay và tịnh tiến) sao cho tư thế của mô hình khớp với dữ liệu quan sát.
 
 Trong đồ họa game, phép quay này quyết định hướng của các xương trong khung xương của các mô hình 3D giúp điều khiển chuyển động. Trong robotics, nó là cơ sở để xác định tư thế của bộ phận chuyển động và đồng bộ hóa giữa không gian cảm biến và cơ cấu chấp hành. Vì vậy, việc hiểu rõ nền tảng toán học của bài toán căn chỉnh cứng đóng vai trò then chốt trong việc thiết kế các hệ thống điều khiển chính xác và khả chuyển.
+
+\subsection{Mục tiêu và phạm vi bài báo cáo}
+
+Bài báo cáo này trình bày một giải pháp hoàn chỉnh để điều khiển khung xương cứng của mô hình 3D dựa vào dữ liệu video từ camera. Hệ thống được phát triển sẽ bao gồm ba thành phần chính:
+
+\begin{enumerate}
+    \item \textbf{Phát hiện và theo dõi landmarks 2D:} Sử dụng các mô hình học sâu để nhận diện vị trí các điểm mốc quan trọng (ví dụ: các khớp tay) trên từng khung hình video, sau đó theo dõi chúng qua các khung hình liên tiếp.
+    
+    \item \textbf{Ước lượng chuyển động 3D:} Từ dữ liệu landmarks 2D, ước lượng quỹ đạo 3D của các điểm này và tính toán các phép biến đổi hình học (quay, tịnh tiến) phù hợp.
+    
+    \item \textbf{Ánh xạ và điều khiển khung xương:} Ánh xạ các chuyển động 3D này lên hệ xương 3D của mô hình 3D, tính toán các góc khớp tương ứng, và áp dụng chúng để điều khiển chuyển động mô hình trong thời gian thực.
+\end{enumerate}
+
+Mỗi thành phần sẽ được trình bày chi tiết ở các chương tiếp theo, bao gồm cơ sở toán học, các thuật toán được sử dụng, và kết quả thực nghiệm.

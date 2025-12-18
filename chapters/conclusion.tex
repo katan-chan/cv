@@ -1,8 +1,13 @@
 \section{Tóm tắt kết quả}
 
-Luận văn trình bày một pipeline xử lý để theo dõi và ánh xạ chuyển động bàn tay
-từ video sang mô hình xương 3D. Hệ thống gồm các thành phần chính:
+Báo cáo trình bày về quy trình xử lý để theo dõi và ánh xạ chuyển động bàn tay từ video sang mô hình 3D. 
 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/result.png}
+    \caption{Một số kết quả minh họa chuyển động bàn tay được theo dõi và ánh xạ lên mô hình 3D.}
+    \label{fig:system_overview}
+\end{figure}
 \begin{itemize}
     \item \textbf{Phát hiện landmarks}: Sử dụng thư viện MediaPipe~\cite{mediapipe2020} 
           để phát hiện 21 điểm đặc trưng trên bàn tay với tốc độ 30 khung hình/giây,
@@ -41,6 +46,6 @@ giao tiếp qua WebSocket đảm bảo độ trễ thấp.
 
 \section{Kết luận}
 
-Hệ thống được xây dựng theo đúng nền tảng toán học (optical flow~\cite{lucas1981iterative}, Kabsch~\cite{kabsch1976solution}, quaternion/SLERP~\cite{shoemake1985animating}) và pipeline MediaPipe~\cite{mediapipe2020}. Tuy nhiên, kết quả thực nghiệm chưa đạt chất lượng mong muốn: chuyển động tái hiện còn dao động, tư thế ngón tay chưa tự nhiên, và root rotation thiếu ổn định trong nhiều tình huống.
+Hệ thống được xây dựng theo đúng nền tảng toán học (optical flow~\cite{lucas1981iterative}, Kabsch~\cite{kabsch1976solution}, quaternion/SLERP~\cite{shoemake1985animating}) và pipeline MediaPipe~\cite{mediapipe2020}. Tuy nhiên, kết quả thực nghiệm chưa đạt chất lượng mong muốn: chuyển động tái hiện còn dao động, tư thế ngón tay chưa tự nhiên, và root rotation thiếu ổn định .
 
 Những hạn chế này bắt nguồn từ đặc tính dữ liệu (độ sâu tương đối), lựa chọn điểm đại diện ít cho căn chỉnh, và ánh xạ động học đơn giản hoá. Do đó, phần kết luận tập trung ghi nhận các vấn đề kỹ thuật và giới hạn quan sát được, thay vì khẳng định hiệu quả ứng dụng.
